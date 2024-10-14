@@ -13,7 +13,7 @@ def getRect4Point(rect):
     """
     luPoint, w, h = rect
     x0, y0 = luPoint
-    return (luPoint, (x0 + w, y0), (x0, y0 + h), (x0 + w, y0 + h))
+    return luPoint, (x0 + w, y0), (x0, y0 + h), (x0 + w, y0 + h)
 
 
 def tranPoint(currentPoint, w, h):
@@ -110,25 +110,28 @@ def chanePlate(srcImgList, destImgList, flag):
                         newW = int(destRect[2] * index)
                         newPoint = (destRect[0][0] + (destRect[1] - newW), destRect[0][1])
                         destRect = (newPoint, newW, destRect[2])
-                        destPointsSelected1 = (newPoint, destPointsSelected[1], (newPoint[0], newPoint[1] + destRect[2]),
-                                              destPointsSelected[3])
+                        destPointsSelected1 = (
+                            newPoint, destPointsSelected[1], (newPoint[0], newPoint[1] + destRect[2]),
+                            destPointsSelected[3])
                     elif isScale[1]:
                         newW = int(destRect[2] * index)
                         destRect = (destRect[0], newW, destRect[2])
-                        destPointsSelected1 = (destPointsSelected[0][0], (destPointsSelected[1][0] - destRect[1], destPointsSelected[1][1]),
-                                              destPointsSelected[2],(destPointsSelected[1][0] - destRect[1], destPointsSelected[3][1]))
+                        destPointsSelected1 = (
+                            destPointsSelected[0][0],
+                            (destPointsSelected[1][0] - destRect[1], destPointsSelected[1][1]),
+                            destPointsSelected[2], (destPointsSelected[1][0] - destRect[1], destPointsSelected[3][1]))
                     if isScale[2]:
                         newH = int(destRect[1] / index)
                         newPoint = (destRect[0][0], destRect[0][1] + (destRect[1] - newH))
                         destRect = (newPoint, destRect[1], newH)
                         destPointsSelected1 = (newPoint, (newPoint[0] + destRect[1], destPointsSelected[1][1]),
-                                              destPointsSelected[2], destPointsSelected[3])
+                                               destPointsSelected[2], destPointsSelected[3])
                     elif isScale[3]:
                         newH = int(destRect[1] / index)
                         destRect = (destRect[0], destRect[1], newH)
                         destPointsSelected1 = (destPointsSelected[0], destPointsSelected[1],
-                                              (destPointsSelected[2][0], destPointsSelected[2][1] - newH),
-                                              (destPointsSelected[3][0], destPointsSelected[3][1] - newH))
+                                               (destPointsSelected[2][0], destPointsSelected[2][1] - newH),
+                                               (destPointsSelected[3][0], destPointsSelected[3][1] - newH))
 
                     srcRect = (currentPoint[0], destRect[1], destRect[2])  # 根据目标车牌的矩形大小以源图像车牌左上角构建一个相同大小的矩形
 
@@ -139,8 +142,8 @@ def chanePlate(srcImgList, destImgList, flag):
                     destPoints = np.float32(destPointsSelected1)
                     srcM = cv2.getPerspectiveTransform(srcPoints, srcRectPoints)
                     destM = cv2.getPerspectiveTransform(destPoints, destRectPoints)
-                    dstSrc = cv2.warpPerspective(currentImg, srcM, (currentImg.shape[1]*2, currentImg.shape[0]*2))
-                    dstDst = cv2.warpPerspective(destImg, destM, (destImg.shape[1]*2, destImg.shape[0]*2))
+                    dstSrc = cv2.warpPerspective(currentImg, srcM, (currentImg.shape[1] * 2, currentImg.shape[0] * 2))
+                    dstDst = cv2.warpPerspective(destImg, destM, (destImg.shape[1] * 2, destImg.shape[0] * 2))
 
                     destX0, destY0 = constructRectFrom4Points(destPointsSelected1)[0]
                     w = destRect[1]

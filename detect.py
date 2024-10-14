@@ -1,18 +1,20 @@
 from __future__ import print_function
+
 import argparse
+
+import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
-import numpy as np
-from data import cfg_mnet, cfg_re50
-from layers.functions.prior_box import PriorBox
-from utils.nms.py_cpu_nms import py_cpu_nms
-import cv2
-from models.retina import Retina
-from utils.box_utils import decode, decode_landm
-import time
 import torchvision
 
+from data import cfg_mnet, cfg_re50
+from layers.functions.prior_box import PriorBox
+from models.retina import Retina
+from utils.box_utils import decode, decode_landm
+from utils.nms.py_cpu_nms import py_cpu_nms
+
 print(torch.__version__, torchvision.__version__)
+
 
 def getargs():
     parser = argparse.ArgumentParser(description='RetinaPL')
@@ -46,7 +48,7 @@ def check_keys(model, pretrained_state_dict):
 
 
 def remove_prefix(state_dict, prefix):
-    ''' Old style model is stored with all names of parameters sharing common prefix 'module.' '''
+    """ Old style model is stored with all names of parameters sharing common prefix 'module.' """
     print('remove prefix \'{}\''.format(prefix))
     f = lambda x: x.split(prefix, 1)[-1] if x.startswith(prefix) else x
     return {f(key): value for key, value in state_dict.items()}
@@ -69,7 +71,6 @@ def load_model(model, pretrained_path, load_to_cpu):
 
 
 def detect(img_list):
-
     args = getargs()
     torch.set_grad_enabled(False)
     cfg = None
@@ -101,7 +102,7 @@ def detect(img_list):
             scale = torch.Tensor([img.shape[1], img.shape[0], img.shape[1], img.shape[0]])
             img -= (104, 117, 123)
             img = img.transpose(2, 0, 1)
-            img = torch.from_numpy(img).unsqueeze(0)   
+            img = torch.from_numpy(img).unsqueeze(0)
             img = img.to(device)
             scale = scale.to(device)
 
@@ -165,4 +166,3 @@ def detect(img_list):
             currentlistpointlist.append(currentpointlist)
         pointlist.append(currentlistpointlist)
     return pointlist
-
