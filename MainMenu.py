@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import QFileDialog, QMessageBox, QListWidgetItem, QListView
 
 import gb
 from creatPlate.generate_special_plate import creatPlate
-from replace import chanePlate
+from replace import changePlate
 
 
 class Ui_Form(object):
@@ -320,7 +320,7 @@ class MainWidget(QtWidgets.QWidget):
         if len(gb.srcImgs) == 0 or len(gb.dstImg) == 0:
             QMessageBox.information(self, "通知", "请选择文件!", QMessageBox.Yes)
         else:
-            resImgs = chanePlate(gb.srcImgs, gb.dstImg, self.flag)
+            resImgs = changePlate(gb.srcImgs, gb.dstImg, self.flag)
             for imgs in resImgs:
                 k = 0
                 if imgs[0] == 0:

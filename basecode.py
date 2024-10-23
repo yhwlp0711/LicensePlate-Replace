@@ -27,9 +27,9 @@ def replaceImgBySpecImgRefPoint(largeImg, largeImgRefPoint, smallImg, smallImgRe
     - 将一个小图像的内容copy到大图像中，要求小图像的smallImgRefPoint对应点和大图像的largeImgRefPoint对应点重合。
     - largeImgRefPoint/smallImgRefPoint都是（X,Y)形式，其值都是对应点在自身图像的位置。
     - overlyBlackMaxValue：为None表示大图像对应区域用小图像简单替代，否则根据smallImg是否有对应灰度值小于overlyBlackMaxValue的像素，  如果有结果图像中这部分像素则保持大图部分的像素不变，其他部分则使用小图对应像素替代
-     - 返回已经copy或融合小图像的大图像
+    - 返回已经copy或融合小图像的大图像
     """
-    #largeImg = np.array(largImg)
+    # largeImg = np.array(largImg)
     if len(largeImg.shape) == 3:
         lh, lw, lc = largeImg.shape
     else:
@@ -62,8 +62,9 @@ def replaceImgBySpecImgRefPoint(largeImg, largeImgRefPoint, smallImg, smallImgRe
 
 def replaceImgRegionBySpecImg(srcImg, regionTopLeftPos, specImg, overlyBlackMaxValue=None):
     """将srcImg的regionTopLeftPos开始位置的一个矩形图像替换为specImg
-      overlyBlackMaxValue: 为None表示大图像对应区域用小图像简单替代，否则根据smallImg是否有对应灰度值小于overlyBlackMaxValue的像素，  如果有结果图像中这部分像素则保持大图部分的像素不变，其他部分则使用小图对应像素替代
-     返回已经copy或融合小图像的大图像"""
+    overlyBlackMaxValue: 为None表示大图像对应区域用小图像简单替代，否则根据smallImg是否有对应灰度值小于overlyBlackMaxValue的像素，
+    如果有结果图像中这部分像素则保持大图部分的像素不变，其他部分则使用小图对应像素替代
+    返回已经copy或融合小图像的大图像"""
     return replaceImgBySpecImgRefPoint(srcImg, regionTopLeftPos, specImg, (0, 0), overlyBlackMaxValue)
 
 

@@ -14,7 +14,8 @@ import math
 from models.retina import Retina
 
 parser = argparse.ArgumentParser(description='RetinaLP Training')
-parser.add_argument('--training_dataset', default='prepare_data/data_folder/train.txt', help='Training dataset directory')
+parser.add_argument('--training_dataset',
+                    default='prepare_data/data_folder/train.txt', help='Training dataset directory')
 parser.add_argument('--network', default='mobile0.25', help='Backbone network mobile0.25 or resnet50')
 parser.add_argument('--num_workers', default=16, type=int, help='Number of workers used in dataloading')
 parser.add_argument('--lr', '--learning-rate', default=1e-3, type=float, help='initial learning rate')
@@ -60,6 +61,7 @@ if args.resume_net is not None:
     state_dict = torch.load(args.resume_net)
     # create new OrderedDict that does not contain `module.`
     from collections import OrderedDict
+
     new_state_dict = OrderedDict()
     for k, v in state_dict.items():
         head = k[:7]
@@ -111,7 +113,8 @@ def train():
     for iteration in range(start_iter, max_iter):
         if iteration % epoch_size == 0:
             # create batch iterator
-            batch_iterator = iter(data.DataLoader(dataset, batch_size, shuffle=True, num_workers=num_workers, collate_fn=detection_collate))
+            batch_iterator = iter(data.DataLoader(dataset, batch_size, shuffle=True,
+                                                  num_workers=num_workers, collate_fn=detection_collate))
             # if (epoch % 10 == 0 and epoch > 0) or (epoch % 5 == 0 and epoch > cfg['decay1']):
             torch.save(net.state_dict(), save_folder + cfg['name'] + '_epoch_' + str(epoch) + '_white_ccpd.pth')
             epoch += 1
@@ -138,9 +141,11 @@ def train():
         load_t1 = time.time()
         batch_time = load_t1 - load_t0
         eta = int(batch_time * (max_iter - iteration))
-        print('Epoch:{}/{} || Epochiter: {}/{} || Iter: {}/{} || Loc: {:.4f} Cla: {:.4f} Landm: {:.4f} || LR: {:.8f} || Batchtime: {:.4f} s || ETA: {}'
+        print('Epoch:{}/{} || Epochiter: {}/{} || Iter: {}/{} || Loc: {:.4f} Cla: {:.4f} Landm: {:.4f}'
+              ' || LR: {:.8f} || Batchtime: {:.4f} s || ETA: {}'
               .format(epoch, max_epoch, (iteration % epoch_size) + 1,
-              epoch_size, iteration + 1, max_iter, loss_l.item(), loss_c.item(), loss_landm.item(), lr, batch_time, str(datetime.timedelta(seconds=eta))))
+                      epoch_size, iteration + 1, max_iter, loss_l.item(), loss_c.item(), loss_landm.item(), lr,
+                      batch_time, str(datetime.timedelta(seconds=eta))))
 
     torch.save(net.state_dict(), save_folder + cfg['name'] + '_Final.pth')
     # torch.save(net.state_dict(), save_folder + 'Final_Retinaface.pth')
@@ -155,7 +160,7 @@ def adjust_learning_rate(optimizer, gamma, epoch, step_index, iteration, epoch_s
     if epoch <= warmup_epoch:
         lr = 1e-6 + (initial_lr - 1e-6) * iteration / (epoch_size * warmup_epoch)
     else:
-        lr = initial_lr * (gamma ** (step_index))
+        lr = initial_lr * (gamma ** step_index)
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
     return lr

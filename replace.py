@@ -74,7 +74,7 @@ def tranPoint(currentPoint, w, h):
     return currentPoint, index, (left, right, up, down)
 
 
-def chanePlate(srcImgList, destImgList, flag):
+def changePlate(srcImgList, destImgList, flag):
     resultList = list()
     # 获取两车的车牌四角点（左上角、右上角、左下角、右下角）
     srcPointsSelected = detect(srcImgList)
@@ -105,7 +105,8 @@ def chanePlate(srcImgList, destImgList, flag):
 
                     currentPoint, index, isScale = tranPoint(currentPoint, w, h)
                     destPointsSelected1 = destPointsSelected
-                    destRect = constructRectFrom4Points(destPointsSelected)  # 根据目标车牌的左上角、右上角、左下角、右下角4四角顶点以左上角构建矩形
+                    # 根据目标车牌的左上角、右上角、左下角、右下角4四角顶点以左上角构建矩形
+                    destRect = constructRectFrom4Points(destPointsSelected)
                     if isScale[0]:
                         newW = int(destRect[2] * index)
                         newPoint = (destRect[0][0] + (destRect[1] - newW), destRect[0][1])
@@ -153,6 +154,7 @@ def chanePlate(srcImgList, destImgList, flag):
 
                     destPlate = np.array(dstDst[destY0:destY0 + h, destX0:destX0 + w])  # 取目标车牌对应的图像
                     srcPlate = np.array(dstSrc[srcY0:srcY0 + h, srcX0:srcX0 + w])
+                    # 风格转换
                     destPlate = styleTran(destPlate, srcPlate)
                     destPlate = cv2.resize(destPlate, (w, h))
 

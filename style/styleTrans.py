@@ -19,8 +19,10 @@ import copy
 def plt2cv2(pltimg):
     return cv2.cvtColor(np.asarray(pltimg), cv2.COLOR_RGB2BGR)
 
+
 def cv2plt(cvimg):
     return Image.fromarray(cv2.cvtColor(cvimg, cv2.COLOR_BGR2RGB))
+
 
 # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # 来判断是否有可用的GPU
 
@@ -55,7 +57,6 @@ def cv2plt(cvimg):
 #     if title is not None:
 #         plt.title(title)
 #     plt.pause(0.001)  # 稍停一下，以便更新地块
-
 
 
 class ContentLoss(nn.Module):
@@ -124,7 +125,6 @@ class Normalization(nn.Module):
     def forward(self, img):
         # normalize img
         return (img - self.mean) / self.std
-
 
 
 def get_style_model_and_losses(cnn, normalization_mean, normalization_std,
@@ -260,10 +260,11 @@ def run_style_transfer(cnn, normalization_mean, normalization_std,
 
     return input_img
 
+
 def styleTran(ContentImg, styleImg):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # 来判断是否有可用的GPU
     loader = transforms.Compose([
-        transforms.Resize(256), # 缩放导入的图像
+        transforms.Resize(256),  # 缩放导入的图像
         transforms.ToTensor()])  # 将其转换为torch tensor
     content_img = loader(cv2plt(ContentImg)).unsqueeze(0).to(device, torch.float)
     style_img = loader(cv2plt(styleImg)).unsqueeze(0).to(device, torch.float)
@@ -276,7 +277,7 @@ def styleTran(ContentImg, styleImg):
 
     cnn_normalization_std = torch.tensor([0.229, 0.224, 0.225]).to(device)
     output = run_style_transfer(cnn, cnn_normalization_mean, cnn_normalization_std,
-                            content_img, style_img, input_img, device)
+                                content_img, style_img, input_img, device)
     image = output.cpu().clone()  # 我们克隆张量不对其进行更改
     image = image.squeeze(0)  # 删除假批次尺寸
     image = unloader(image)
