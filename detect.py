@@ -6,6 +6,7 @@ import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
 import torchvision
+import cv2
 
 from data import cfg_mnet, cfg_re50
 from layers.functions.prior_box import PriorBox
@@ -80,12 +81,14 @@ def detect(img_list):
         cfg = cfg_re50
     # net and model
     net = Retina(cfg=cfg, phase='test')
-    net = load_model(net, args.trained_model, "cuda:0")
+    # net = load_model(net, args.trained_model, "cuda:0")
+    net = load_model(net, args.trained_model, "mps")
     net.eval()
     # print('Finished loading model!')
     # print(net)
     cudnn.benchmark = True
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("mps")
     net = net.to(device)
 
     resize = 1
@@ -163,6 +166,24 @@ def detect(img_list):
                 leftup = (b[9], b[10])
                 rightup = (b[11], b[12])
                 currentpointlist.append((leftup, rightup, leftdown, rightdown))
+            # 绘制车牌区域
+            # for point in currentpointlist:
+            #     cv2.rectangle(currentImg, point[0], point[3], (0, 255, 0), 2)
+            #     cv2.circle(currentImg, point[0], 2, (0, 0, 255), 2)
+            #     cv2.circle(currentImg, point[1], 2, (0, 0, 255), 2)
+            #     cv2.circle(currentImg, point[2], 2, (0, 0, 255), 2)
+            #     cv2.circle(currentImg, point[3], 2, (0, 0, 255), 2)
+            # cv2.imshow('img', currentImg)
+            # cv2.waitKey(0)
             currentlistpointlist.append(currentpointlist)
         pointlist.append(currentlistpointlist)
     return pointlist
+
+# import cv2
+
+# if __name__ == '__main__':
+#     img = cv2.imread('./testimgs/3.jpg')
+#     # cv2.imshow('img', img)
+#     # cv2.waitKey(0)
+#     res = detect([[0, img]])
+#     print(res)

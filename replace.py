@@ -143,9 +143,15 @@ def changePlate(srcImgList, destImgList, flag):
                     destPoints = np.float32(destPointsSelected1)
                     srcM = cv2.getPerspectiveTransform(srcPoints, srcRectPoints)
                     destM = cv2.getPerspectiveTransform(destPoints, destRectPoints)
+                    # cv2.imshow('srcM', srcM)
+                    # cv2.imshow('destM', destM)
                     dstSrc = cv2.warpPerspective(currentImg, srcM, (currentImg.shape[1] * 2, currentImg.shape[0] * 2))
                     dstDst = cv2.warpPerspective(destImg, destM, (destImg.shape[1] * 2, destImg.shape[0] * 2))
 
+                    cv2.imshow(f'dstSrc_{Itemindex}_{Imgindex}', dstSrc)
+                    cv2.imshow(f'dstDst_{Itemindex}_{Imgindex}', dstDst)
+                    cv2.waitKey(0)  # 按任意键继续
+                    
                     destX0, destY0 = constructRectFrom4Points(destPointsSelected1)[0]
                     w = destRect[1]
                     h = destRect[2]
@@ -154,9 +160,14 @@ def changePlate(srcImgList, destImgList, flag):
 
                     destPlate = np.array(dstDst[destY0:destY0 + h, destX0:destX0 + w])  # 取目标车牌对应的图像
                     srcPlate = np.array(dstSrc[srcY0:srcY0 + h, srcX0:srcX0 + w])
+                    cv2.imshow('srcPlate1', srcPlate)
+                    cv2.imshow('destPlate1', destPlate)
                     # 风格转换
                     destPlate = styleTran(destPlate, srcPlate)
                     destPlate = cv2.resize(destPlate, (w, h))
+                    # cv2.imshow('srcPlate2', srcPlate)
+                    cv2.imshow('destPlate2', destPlate)
+                    cv2.waitKey(0)
 
                     replaceImgRegionBySpecImg(dstSrc, currentPoint[0], destPlate)  # 将源车牌的图像换成目标车牌图像
                     resultImgSrc = cv2.warpPerspective(dstSrc, srcM, (currentImg.shape[1], currentImg.shape[0]),
@@ -167,3 +178,8 @@ def changePlate(srcImgList, destImgList, flag):
                 currentItemRes.append(currentImg)
         resultList.append(currentItemRes)
     return resultList
+
+
+# img1 = cv2.imread('testimgs/1.png')
+# img2 = cv2.imread('plate.jpg')
+# res = changePlate([[0, img1]], [[0, img2]], False)

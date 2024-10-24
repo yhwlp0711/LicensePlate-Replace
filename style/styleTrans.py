@@ -262,7 +262,8 @@ def run_style_transfer(cnn, normalization_mean, normalization_std,
 
 
 def styleTran(ContentImg, styleImg):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # 来判断是否有可用的GPU
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # 来判断是否有可用的GPU
+    device = torch.device("mps")
     loader = transforms.Compose([
         transforms.Resize(256),  # 缩放导入的图像
         transforms.ToTensor()])  # 将其转换为torch tensor

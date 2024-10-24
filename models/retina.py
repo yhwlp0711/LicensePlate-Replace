@@ -4,9 +4,10 @@ import torchvision.models.detection.backbone_utils as backbone_utils
 import torchvision.models._utils as _utils
 import torch.nn.functional as F
 from collections import OrderedDict
-from models.net import MobileNetV1 as MobileNetV1
-from models.net import FPN as FPN
-from models.net import SSH as SSH
+# from models.net import MobileNetV1 as MobileNetV1
+# from models.net import FPN as FPN
+# from models.net import SSH as SSH
+from .net import MobileNetV1, FPN, SSH
 
 
 class ClassHead(nn.Module):
@@ -140,3 +141,6 @@ class Retina(nn.Module):
         else:
             output = (bbox_regressions, F.softmax(classifications, dim=-1), ldm_regressions)
         return output
+
+# net = Retina(cfg={'name': 'mobilenet0.25', 'pretrain': True, 'return_layers': {'stage1': 1, 'stage2': 2, 'stage3': 3}, 'in_channel': 24, 'out_channel': 64}, phase='train')
+# print(net)
