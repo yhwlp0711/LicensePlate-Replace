@@ -61,6 +61,7 @@ def load_model(model, pretrained_path, load_to_cpu):
         pretrained_dict = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
     else:
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        # device = torch.device("mps")
         pretrained_dict = torch.load(pretrained_path, map_location=lambda storage, loc: storage.cuda(device))
     if "state_dict" in pretrained_dict.keys():
         pretrained_dict = remove_prefix(pretrained_dict['state_dict'], 'module.')
@@ -87,8 +88,8 @@ def detect(img_list):
     # print('Finished loading model!')
     # print(net)
     cudnn.benchmark = True
-    # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    device = torch.device("mps")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # device = torch.device("mps")
     net = net.to(device)
 
     resize = 1
@@ -168,11 +169,11 @@ def detect(img_list):
                 currentpointlist.append((leftup, rightup, leftdown, rightdown))
             # 绘制车牌区域
             # for point in currentpointlist:
-            #     cv2.rectangle(currentImg, point[0], point[3], (0, 255, 0), 2)
-            #     cv2.circle(currentImg, point[0], 2, (0, 0, 255), 2)
-            #     cv2.circle(currentImg, point[1], 2, (0, 0, 255), 2)
-            #     cv2.circle(currentImg, point[2], 2, (0, 0, 255), 2)
-            #     cv2.circle(currentImg, point[3], 2, (0, 0, 255), 2)
+            #     cv2.rectangle(currentImg, point[0], point[3], (0, 255, 0), 1)
+            #     cv2.circle(currentImg, point[0], 2, (0, 0, 255), 1)
+            #     cv2.circle(currentImg, point[1], 2, (0, 0, 255), 1)
+            #     cv2.circle(currentImg, point[2], 2, (0, 0, 255), 1)
+            #     cv2.circle(currentImg, point[3], 2, (0, 0, 255), 1)
             # cv2.imshow('img', currentImg)
             # cv2.waitKey(0)
             currentlistpointlist.append(currentpointlist)
@@ -182,7 +183,7 @@ def detect(img_list):
 # import cv2
 
 # if __name__ == '__main__':
-#     img = cv2.imread('./testimgs/3.jpg')
+#     img = cv2.imread('./testimgs/4.jpg')
 #     # cv2.imshow('img', img)
 #     # cv2.waitKey(0)
 #     res = detect([[0, img]])
