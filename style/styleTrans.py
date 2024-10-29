@@ -247,8 +247,13 @@ def run_style_transfer(cnn, normalization_mean, normalization_std,
             run[0] += 1
             if run[0] % 50 == 0:
                 print("run {}:".format(run))
-                print('Style Loss : {:4f} Content Loss: {:4f}'.format(
-                    style_score.item(), content_score.item()))
+                # print('Style Loss : {:4f} Content Loss: {:4f}'.format(
+                #     style_score.item(), content_score.item()))
+                print('Style Loss :')
+                print(style_score)
+                print(' ')
+                print('Content Loss: ')
+                print(content_score)
                 print()
 
             return style_score + content_score

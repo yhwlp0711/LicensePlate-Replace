@@ -148,8 +148,11 @@ def changePlate(srcImgList, destImgList, flag):
                     dstSrc = cv2.warpPerspective(currentImg, srcM, (currentImg.shape[1] * 2, currentImg.shape[0] * 2))
                     dstDst = cv2.warpPerspective(destImg, destM, (destImg.shape[1] * 2, destImg.shape[0] * 2))
 
+                    # cv2.imshow(f'currentImg_{Itemindex}_{Imgindex}', currentImg)
                     # cv2.imshow(f'dstSrc_{Itemindex}_{Imgindex}', dstSrc)
                     # cv2.imshow(f'dstDst_{Itemindex}_{Imgindex}', dstDst)
+                    # cv2.imwrite('midres1.jpg', currentImg)
+                    # cv2.imwrite('midres2.jpg', dstSrc)
                     # cv2.waitKey(0)  # 按任意键继续
                     
                     destX0, destY0 = constructRectFrom4Points(destPointsSelected1)[0]
@@ -172,7 +175,11 @@ def changePlate(srcImgList, destImgList, flag):
                     replaceImgRegionBySpecImg(dstSrc, currentPoint[0], destPlate)  # 将源车牌的图像换成目标车牌图像
                     resultImgSrc = cv2.warpPerspective(dstSrc, srcM, (currentImg.shape[1], currentImg.shape[0]),
                                                        flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP)
+                    # cv2.imshow('resultImgSrc', resultImgSrc)
+                    # cv2.waitKey(0)
                     tempplate = np.array(resultImgSrc[srcY0:srcY0 + resRect[2], srcX0:srcX0 + resRect[1]])
+                    # cv2.imshow('tempplate', resultImgSrc[srcY0:srcY0 + resRect[2], srcX0:srcX0 + resRect[1]])
+                    # cv2.waitKey(0)
                     replaceImgRegionBySpecImg(currentImg, resRect[0], tempplate)
 
                 currentItemRes.append(currentImg)
@@ -180,6 +187,6 @@ def changePlate(srcImgList, destImgList, flag):
     return resultList
 
 
-# img1 = cv2.imread('testimgs/4.jpg')
+# img1 = cv2.imread('testimgs/10.jpg')
 # img2 = cv2.imread('plate.jpg')
 # res = changePlate([[0, img1]], [[0, img2]], False)

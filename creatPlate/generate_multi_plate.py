@@ -1,12 +1,16 @@
-import numpy as np
-import cv2, os, argparse
 from glob import glob
+
+import argparse
+import cv2
+import numpy as np
+import os
 from tqdm import tqdm
 
-from .plate_number import random_select, generate_plate_number_white, generate_plate_number_yellow_xue
-from .plate_number import generate_plate_number_black_gangao, generate_plate_number_black_shi, generate_plate_number_black_ling
+from .plate_number import generate_plate_number_black_gangao, generate_plate_number_black_shi, \
+    generate_plate_number_black_ling
 from .plate_number import generate_plate_number_blue, generate_plate_number_yellow_gua
 from .plate_number import letters, digits
+from .plate_number import random_select, generate_plate_number_white, generate_plate_number_yellow_xue
 
 
 def get_location_data(length=7, split_id=1, height=140):
@@ -80,15 +84,16 @@ def copy_to_image_multi(img, font_img, bbox, bg_color, is_red):
 class MultiPlateGenerator:
     def __init__(self, adr_plate_model, adr_font):
         # 车牌底板路径
-        self.adr_plate_model = 'creatPlate/' + adr_plate_model
+        self.adr_plate_model = 'creatPlate\\' + adr_plate_model
         # 车牌字符路径
-        self.adr_font = 'creatPlate/' + adr_font
+        self.adr_font = 'creatPlate\\' + adr_font
 
         # 车牌字符图片，预存处理
         self.font_imgs = {}
-        font_filenames = glob(os.path.join('creatPlate/' + adr_font, '*jpg'))
+        font_filenames = glob(os.path.join('creatPlate\\' + adr_font, '*jpg'))
         for font_filename in font_filenames:
-            font_img = cv2.imread(font_filename, cv2.IMREAD_GRAYSCALE)
+            # font_img = cv2.imread(font_filename, cv2.IMREAD_GRAYSCALE)
+            font_img = cv2.imdecode(np.fromfile(font_filename, dtype=np.uint8), cv2.IMREAD_GRAYSCALE)
 
             if '140' in font_filename:
                 font_img = cv2.resize(font_img, (45, 90))
